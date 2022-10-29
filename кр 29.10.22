@@ -1,0 +1,32 @@
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse('Hello,world!')
+
+from django.conf.urls import url
+from . import views
+
+app_name = 'riddles'
+
+urlpatterns = [
+    url(r'^$',views.index,name='index'),
+]
+
+from django.conf.urls import include,url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^riddles/',include('riddles.urls')),
+    url(r'^admin/',admin.site.urls),
+]
+
+from django.db import models 
+
+class Riddle(models.Model):
+    riddle_text = models.CharField(max_lenght = 255)
+    pub_date = models.DateTimeField('date published')
+
+class Option(models.Model):
+    riddle = models.ForeignKey(Riddle,on_delete=models.CASCADE)
+    text = models.CharField(max_lenght=255)
+    correct = models.BooleanField(default=False)
